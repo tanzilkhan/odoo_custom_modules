@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <template id="sale_order_pi">
+            <t t-name="esq_sale_and_pi.sale_order_pi">
+                <t t-call="report.html_container">
+                    <t t-foreach="docs" t-as="o">
+                        <t>
+
+                            <!--<t t-name="account.report_invoice_document">-->
+                            <!--<t t-name="esq_sale_and_pi.sale_order_pi">-->
+
+                                <div class="row header">
+                                    <!--<img src="/esq_sale_and_pi/static/description/esquire_edited_header.jpg"/>-->
+                                    <img src="/esq_sale_and_pi/static/description/esquire_logo.png" style="float:left; height:60px; width:auto; padding-bottom:5px;"/>
+                                    <img src="/esq_sale_and_pi/static/description/braiform_logo.png" style="float:right; height:40px; width:auto; padding-bottom:5px;"/>
+
+                                </div>
+                                <div class="page" style="border:2px solid black; padding:10px;font-size:0.7em;">
+                                    <div class="row">
+                                    </div>
+                                    <div class="row">
+                                        <p style="text-align:center; font-weight: bold; text-decoration: underline; font-size:14px; margin-top:-10px">PRO-FORMA INVOICE</p>
+                                        <div class="col-xs-6">
+                                            <strong style="margin-top:-5px">PI No :</strong>
+                                            <span style="margin-top:-5px" t-field="o.pi_no"/>
+                                        </div>
+
+                                        <div class="col-xs-6" style="padding-left:112px;">
+                                            <strong style="margin-top:-5px">Date:</strong>
+                                            <span style="margin-top:-5px" t-field="o.date_order" t-field-options='{"format": "MM-dd-y"}' />
+                                        </div>
+
+                                        <br/>
+
+                                        <div class="col-xs-4" style="border:2px solid black; margin-left:10px;">
+                                            <p style="text-decoration:underline;"><strong>Consignee:</strong></p>
+
+                                            <p style="margin-top:-7px"><address t-field="o.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;:                 [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"></address></p>
+
+                                            <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                                            <p style="text-decoration:underline; margin-top:-20px"><strong >Ship To:</strong></p>
+                                            <p style="margin-top:-10px" t-field="o.partner_id.shipping_name"/>
+                                            <p style="margin-top:-10px" t-field="o.partner_id.shipping_address"/>
+                                        </div>
+
+                                        <div class="col-xs-4" style="border:2px solid black; float:right; margin-right:10px;">
+                                            <u><strong>Consignor</strong></u>
+                                            <p t-field="o.company_id"/>
+                                            Ideal Trade Center 102 Shaheed Tajudden Ahmed Sarani, Tejgoag I/A
+                                            Dhaka 1208
+                                            Bangladesh
+                                        </div>
+                                    </div>
+                                    <br/>
+
+
+                                    <div class="row" style="margin-top:-7px;">
+                                        <div class="col-xs-4">
+                                            <strong>Style :</strong>
+                                            <span t-field="o.style_no"/><br/>
+
+                                            <strong>Retailer :</strong>
+                                            <span t-field="o.retailer_name"/><br/>
+
+                                            <strong>Goods Ready Date:</strong>
+                                            <span t-field="o.goodsr_date"/><br/>
+                                        </div>
+
+                                        <div class="col-xs-4 col-xs-offset-3" style="float:right;">
+                                            <strong>HS Code:</strong>
+                                            <span t-field="o.hs_code"/><br/>
+
+                                            <strong>So No:</strong>
+                                            <span t-field="o.ebiz_no"/><br/>
+
+                                            <strong>Po No:</strong>
+                                            <span t-field="o.po_no"/>
+
+                                        </div>
+                                    </div>
+
+                                    <br/>
+
+                                    <table class="table table-bordered" style="margin-top:-10px">
+                                        <tr>
+                                            <th style="text-align:center;">S/L</th>
+                                            <th style="text-align:center;">Item Ref</th>
+                                            <!--<th>Description</th>-->
+                                            <th t-if="True in [l.euro_size.name!=False for l in o.order_line]" style="text-align:center;">Euro Size</th>
+                                            <th t-if="True in [l.uk_size.name!=False for l in o.order_line]" style="text-align:center;">UK Size</th>
+                                            <th t-if="True in [l.cn_size.name!=False for l in o.order_line]" style="text-align:center;">CN Size</th>
+                                            <th t-if="True in [l.size.name!=False for l in o.order_line]" style="text-align:center;">Size</th>
+                                            <th t-if="True in [l.color_pan.name!=False for l in o.order_line]" style="text-align:center;">Pantone</th>
+                                            <th style="text-align:center;">Details</th>
+                                            <th style="text-align:center;">Quantity(Pcs)</th>
+                                            <th style="text-align:center;">Price/Per Pc(FOB)</th>
+                                            <th style="text-align:center;">Amount(US$)</th>
+                                        </tr>
+                                        <tbody class="invoice_tbody">
+                                            <t t-set="i" t-value="1"/>
+                                            <tr t-foreach="o.order_line" t-as="l">
+                                                <!--<td><span t-field="l.sequence"/></td>-->
+                                                <td style="text-align:center;"><span t-esc="i"/></td>
+                                                <td style="text-align:center;"><span t-field="l.product_id"/></td>
+                                                <td t-if="l.euro_size" style="text-align:right;"><span t-field="l.euro_size"/></td>
+                                                <td t-if="l.uk_size" style="text-align:right;"><span t-field="l.uk_size"/></td>
+                                                <td t-if="l.cn_size" style="text-align:right;"><span t-field="l.cn_size"/></td>
+                                                <td t-if="l.size" style="text-align:right;"><span t-field="l.size"/></td>
+                                                <td t-if="l.color_pan" style="text-align:center;"><span t-field="l.color_pan"/></td>
+                                                <td style="text-align:center;"><span t-field="l.name"/></td>
+                                                <td style="text-align:right;"><span t-field="l.product_uom_qty"/></td>
+                                                <td style="text-align:right;"><span t-field="l.price_unit"/></td>
+                                                <td class="text-right">
+                                                    <span t-field="l.price_subtotal" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;,               &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                                </td>
+                                                <t t-set="i" t-value="i+1"/>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="row">
+                                        <div class="col-xs-4 pull-right">
+                                            <table class="table table-condensed" style="margin-top:-10px">
+                                                <tr  class="border-black">
+                                                    <td>Subtotal</td>
+                                                    <td class="text-right">
+                                                        $<span t-field="o.amount_untaxed"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-black">
+                                                    <td>Other Total Cost</td>
+                                                    <td class="text-right">
+                                                        $<span t-field="o.total_other_cost"/>
+                                                    </td>
+                                                </tr>
+                                                <tr class="border-black">
+                                                    <td><strong>Total</strong></td>
+                                                    <td class="text-right">
+                                                        $<span t-field="o.amount_total"/>
+                                                    </td>
+                                                </tr>
+                                            </table>
+                                        </div>
+
+                                        <div class="col-xs-4 pull-left">
+                                            <table class="table table-bordered" style="margin-top:-10px">
+                                                <tr>
+                                                    <th>Other Cost</th>
+                                                    <th>Amount</th>
+                                                </tr>
+                                                <tbody class="invoice_tbody">
+                                                    <tr t-foreach="o.other_cost" t-as="l">
+                                                        <td><span t-field="l.other_costs"/></td>
+                                                        <td>$<span t-field="l.cost_amount"/></td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <strong>In Words:</strong>
+                                        <span t-field="o.amount_total_words"/>
+                                    </div>
+
+                                    <div>
+                                        <u><strong>TERMS and CONDITION:</strong></u>
+                                        <p t-field="o.termscond_description"/>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="row">
+                                            <div class="col-xs-7" style="float:left; margin-left:15px;">
+                                                For and on behalf of  : <strong t-field="o.partner_id"/>
+                                            </div>
+                                            <div class="col-xs-4" style="float:right;">
+                                                For : <strong t-field="o.company_id"/>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-xs-3" style="float:left; margin-left:15px">
+                                                <br/>
+                                                <hr style="border: 1px dotted black;"/>
+                                                <p style="margin-top:-10px"> Authorized Signatory</p>
+                                            </div>
+
+                                            <div class="col-xs-3" style="float:right; margin-right:15px">
+                                                <p style="padding-left:15px; margin-top:10px" t-field="o.user_id"/>
+                                                <hr style="border: 1px dotted black; margin-top:-8px"/>
+                                                <p style="margin-top:-10px"> Authorized Signatory</p>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!--<div class="col-xs-8">
+                                         <address t-field="o.company_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+                                   </div>-->
+                                    <div class="footer">
+                                        <div class="row">
+                                            <div class="col-xs-2 pull-right">
+                                                <small>
+                                                    <span></span>
+                                                    <span class="page" />
+                                                    <span>of</span>
+                                                    <span class="topage" />
+                                                </small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            <!--</t>-->
+                        </t>
+                    </t>
+                </t>
+
+            </t>
+
+
+        </template>
+
+        <report
+                id="custom_sale_pi_report"
+                string="Proforma Invoice"
+                model="sale.order"
+                report_type="qweb-pdf"
+                name="esq_sale_and_pi.sale_order_pi"
+                file="esq_sale_and_pi.sale_order_pi"
+        />
+
+    </data>
+</openerp>

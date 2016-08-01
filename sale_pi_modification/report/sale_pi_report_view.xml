@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="esq_sale_pi_report_wiz" model="ir.ui.view">
+            <field name="name">esq.sale.pi.report.wiz</field>
+            <field name="model">esq.sale.pi.report</field>
+            <field name="arch" type="xml">
+                <form>
+                    <group>
+                        <field name="date_from"/>
+                        <field name="date_to"/>
+                    </group>
+                    <div>
+                        <field name="daily_order_rcv_rel">
+                            <tree editable="bottom">
+                                <field name="so_date"/>
+                                <field name="customer"/>
+                                <field name="model"/>
+                                <field name="description"/>
+                                <field name="model_width"/>
+                                <field name="model_length"/>
+                                <field name="model_gusset"/>
+                                <field name="model_flap"/>
+                                <field name="model_uom"/>
+                                <field name="model_quantity"/>
+                                <field name="model_unit_price"/>
+                                <field name="so_amount"/>
+                                <field name="pi_no"/>
+                                <field name="so_retailer"/>
+                            </tree>
+                        </field>
+                    </div>
+                    <group>
+                        <field name="total_quantity" invisible="True"/>
+                        <field name="total_amount" invisible="True"/>
+                    </group>
+                    <footer>
+                        <button string="Print" name="sale_summary_print" type="object" class="oe_highlight"/>
+                        or
+                        <button icon="gtk-execute" name="xls_export" string="Excel Download" type="object" context="{'xls_export':1}" colspan="2"/>
+                        or
+                        <button string="Cancel" class="oe_link" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_esq_sale_pi_report_wiz" model="ir.actions.act_window">
+            <field name="name">Daily Order Received Report</field>
+            <field name="res_model">esq.sale.pi.report</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="esq_sale_pi_report_wiz"/>
+            <field name="target">new</field>
+        </record>
+
+        <menuitem icon="STOCK_INDENT" action="action_esq_sale_pi_report_wiz"
+            id="menu_action_so_pi_wizard"
+            parent="base.menu_sales" sequence="7"/>
+
+        <report
+                id="custom_sale_pi_report"
+                model="esq.sale.pi.report"
+                string="Sales and PI Invoice"
+                report_type="qweb-pdf"
+                name="sale_pi_modification.sale_pi_report_document"
+                file="sale_pi_modification.sale_pi_report_document"
+                />
+
+        <record id="paperformat_sale_pi_report" model="report.paperformat">
+            <field name="name">Custom A4</field>
+            <field name="default" eval="True" />
+            <field name="format">A4</field>
+            <field name="page_height">0</field>
+            <field name="page_width">0</field>
+            <field name="orientation">Landscape</field>
+            <field name="margin_top">4</field>
+            <field name="margin_bottom">4</field>
+            <field name="margin_left">4</field>
+            <field name="margin_right">4</field>
+            <field name="header_line" eval="False" />
+            <field name="header_spacing">0</field>
+            <field name="dpi">90</field>
+        </record>
+
+        <record id="sale_pi_modification.custom_sale_pi_report" model="ir.actions.report.xml">
+            <field name="paperformat_id" ref="sale_pi_modification.paperformat_sale_pi_report" />
+        </record>
+
+
+        <!-- This SECTION CREATES MENU IN DROP DOWN FOR PRINTING-->
+        <report
+            string="Export Excel SalE Order"
+            id="action_saleee_order_xls"
+            model="sale.order"
+            report_type="xls"
+            name="sale.order.xls"
+        />
+
+    </data>
+</openerp>

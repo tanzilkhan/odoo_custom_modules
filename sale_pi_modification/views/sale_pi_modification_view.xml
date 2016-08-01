@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Terms and conditions starts here-->
+        <record id="terms_conditions_form" model="ir.ui.view">
+            <field name="name">terms.conditions.form</field>
+            <field name="model">terms.conditions</field>
+            <field name="arch" type="xml">
+                <form string="Terms &amp; Conditions">
+                    <group>
+                        <field name="name"/>
+                        <!--<field name="is_on"/>-->
+                        <field name="tc_description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="terms_conditions_tree" model="ir.ui.view">
+            <field name="name">terms.conditions.tree</field>
+            <field name="model">terms.conditions</field>
+            <field name="arch" type="xml">
+                <tree string="Terms &amp; Conditions">
+                    <field name="name"/>
+                    <!--<field name="is_on"/>-->
+                    <field name="tc_description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_terms_conditions" model="ir.actions.act_window">
+            <field name="name">Terms &amp; Conditions</field>
+            <field name="res_model">terms.conditions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_terms_conditions" action="open_terms_conditions" parent="base.menu_sales" name="Terms &amp; Conditions" sequence="10"/>
+
+
+        <!--Advising Bank starts here-->
+        <record id="advising_bank_form" model="ir.ui.view">
+            <field name="name">advising.bank.form</field>
+            <field name="model">advising.bank</field>
+            <field name="arch" type="xml">
+                <form string="Advising Bank">
+                    <group>
+                        <field name="name"/>
+                        <!--<field name="is_on"/>-->
+                        <field name="ab_description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="advising_bank_tree" model="ir.ui.view">
+            <field name="name">advising.bank.tree</field>
+            <field name="model">advising.bank</field>
+            <field name="arch" type="xml">
+                <tree string="Advising Bank">
+                    <field name="name"/>
+                    <!--<field name="is_on"/>-->
+                    <field name="ab_description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_advising_bank" model="ir.actions.act_window">
+            <field name="name">Advising Bank</field>
+            <field name="res_model">advising.bank</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_advising_bank" action="open_advising_bank" parent="base.menu_sales" name="Advising Bank" sequence="11"/>
+
+        <!--Account Invoice Form Inherit Starts Here-->
+       <record id="account_invoice_adding_form" model="ir.ui.view">
+             <field name="name">account.invoiceee.form.inherit</field>
+             <field name="model">account.invoice</field>
+             <field name="inherit_id" ref="account.invoice_form"/>
+             <field name="arch" type="xml">
+
+                 <xpath expr="//field[@name='partner_id']" position="after" >
+                     <field name="retailer_mod" />
+                 </xpath>
+
+                 <xpath expr="//tree[@string='Invoice Lines']/field[@name='product_id']" position="before" >
+                     <field name="product_category" />
+                 </xpath>
+
+                 <xpath expr="//tree[@string='Invoice Lines']/field[@name='product_id']" position="replace" >
+                     <field name="product_id" domain="[('categ_id','=',product_category)]"
+                                        on_change="product_id_change(product_id, uos_id, quantity, name, parent.type, parent.partner_id, parent.fiscal_position, price_unit, parent.currency_id, parent.company_id, context)"/>
+                 </xpath>
+
+
+
+                 <xpath expr="//tree[@string='Invoice Lines']/field[@name='name']" position="after" >
+                    <field name="hs_code" />
+                    <field name="order_ref" />
+                    <field name="expected_date" />
+                 <!--<field name="dh_po" />-->
+                     <!--<field name="width_size" />-->
+                     <!--<field name="gusset_size" />-->
+                     <!--<field name="length_size" />-->
+                     <!--<field name="flap_size"/>-->
+                </xpath>
+                <xpath expr="//group[@class='oe_subtotal_footer oe_right']" position="after">
+                    <group>
+                        <!--<field name="other_cost"/>-->
+                        <field name="total_quantity"/>
+                        <field name="amount_total_words"/>
+                        <field name="shipment_term"/>
+                        <field name="shipment_mode"/>
+                        <field name="customer_order_no"/>
+                        <field name="customer_style_no"/>
+                        <field name="retailer_store"/>
+                        <field name="advising_bank"/>
+                        <field name="term_payment"/>
+                        <field name="terms_conditions"/>
+                    </group>
+                     <div>
+                        <field name="termscond_description" placeholder="Terms and Conditions"/>
+                        <field name="ab_description" placeholder="Advising Bank Details"/>
+                     </div>
+                 </xpath>
+
+                 <!-- Payment Term Invisible -->
+                 <xpath expr="//field[@name='payment_term']" position="attributes" >
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+            </field>
+        </record>
+
+        <!--Sale order Inheritence start here-->
+        <record id="sale_order_adding_form" model="ir.ui.view">
+             <field name="name">sale.order.form.inherit</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='date_order']" position="after" >
+                     <field name="date_confirm" />
+                 </xpath>
+
+                 <xpath expr="//tree[@string='Sales Order Lines']/field[@name='product_id']" position="before" >
+                     <field name="product_category" />
+                 </xpath>
+
+                 <xpath expr="//tree[@string='Sales Order Lines']/field[@name='product_id']" position="replace" >
+                      <field name="product_id" domain="[('categ_id','=',product_category)]"
+                                        context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom, 'company_id': parent.company_id}"
+                                        groups="base.group_user"
+                                        on_change="product_id_change(parent.pricelist_id, product_id, product_uom_qty, False, product_uos_qty, False, name, parent.partner_id, False, True, parent.date_order, False, parent.fiscal_position, False, context)"/>
+                 </xpath>
+                 <xpath expr="//page[@string='Order Lines']//div[@name='discount']" position="after">
+                     <field name="order_ref"/>
+                     <field name="expected_date"/>
+                 </xpath>
+
+                 <xpath expr="//tree[@string='Sales Order Lines']/field[@name='name']" position="after" >
+                     <field name="hs_code" />
+                     <field name="order_ref" />
+                     <field name="expected_date" />
+                     <!--<field name="dh_po" />-->
+                     <!--<field name="width_size" />-->
+                     <!--<field name="gusset_size" />-->
+                     <!--<field name="length_size" />-->
+                     <!--<field name="flap_size"/>-->
+                 </xpath>
+
+                 <xpath expr="//field[@name='note']" position="replace" >
+                     <field name="note" class="oe_inline" placeholder="Additional Notes..."/>
+                 </xpath>
+
+                 <xpath expr="//group[@class='oe_subtotal_footer oe_right']" position="after">
+                    <group>
+                        <!--<field name="other_cost"/>-->
+                        <field name="total_uos_quantity"/>
+                        <field name="amount_total_words"/>
+                        <field name="shipment_term"/>
+                        <field name="shipment_mode"/>
+                        <field name="customer_order_no"/>
+                        <field name="customer_style_no"/>
+                        <field name="retailer_store"/>
+                        <field name="advising_bank"/>
+                        <field name="term_payment"/>
+                        <field name="terms_conditions"/>
+                    </group>
+                     <div>
+                        <field name="termscond_description" placeholder="Terms and Conditions"/>
+                         <field name="ab_description" placeholder="Advising Bank Details"/>
+                     </div>
+                 </xpath>
+
+                 <!-- Delivery Method Invisible -->
+                 <xpath expr="//group[@style='width: 65%']" position="attributes" >
+                     <attribute name="invisible">1</attribute>
+                 </xpath>
+
+             </field>
+        </record>
+
+    </data>
+</openerp>

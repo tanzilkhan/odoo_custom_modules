@@ -1,0 +1,206 @@
+<?xml version="1.0"?>
+<t t-name="account.report_invoice_document">
+
+    <div class="row header">
+             <img class="img img-responsive" src="/esq_sale_and_pi/static/description/esquerFullHeader.jpg"/>
+
+    </div>
+        <div class="page" style="border:2px solid black;padding:15px;font-size:11px">
+             <div class="row">
+
+             <h2 class="col-xs-4 col-xs-offset-4" >
+                <u><span t-if="o.type == 'out_invoice' and (o.state == 'open' or o.state == 'paid')">Invoice</span></u>
+                <u><span t-if="o.type == 'out_invoice' and o.state == 'proforma2'">Proforma Invoice</span></u>
+                <u><span t-if="o.type == 'out_invoice' and o.state == 'draft'">Draft Invoice</span></u>
+                <u><span t-if="o.type == 'out_invoice' and o.state == 'cancel'">Cancelled Invoice</span></u>
+                <u><span t-if="o.type == 'out_refund'">Refund</span></u>
+                <u><span t-if="o.type == 'in_refund'">Supplier Refund</span></u>
+                <u><span t-if="o.type == 'in_invoice'">Supplier Invoice</span></u>
+                <u><span t-field="o.number"/></u>
+            </h2>
+             </div>
+            <div class="row">
+                <div>
+                    <strong>PI No :</strong>
+                    <span t-field="o.pi_no"></span>
+                </div>
+
+                <div>
+                    <strong>Date:</strong>
+                    <p t-field="o.date_invoice"/>
+                </div>
+<br/>
+                    <div class="col-xs-4" style="padding:5px;border:2px solid black;">
+                       <u><strong>Consignee:</strong></u>
+                       <address t-field="o.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;:                 [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+                    <span t-if="o.partner_id.vat">TIN: <span t-field="o.partner_id.vat"/></span>
+                       <u><strong>Ship To:</strong></u>
+                       <p t-field="o.partner_id.shipping_name"/>
+                       <p t-field="o.partner_id.shipping_address"/>
+                    </div>
+
+                <div class="col-xs-3 col-xs-offset-5" style="padding:5px;border:2px solid black;">
+                        <u><strong>Consignor</strong></u>
+                        <p t-field="o.company_id"/>
+                     Ideal Trade Center 102 Shaheed Tajudden Ahmed Sarani, Tejgoag I/A
+Dhaka 1208
+Bangladesh
+                </div>
+            </div>
+<br/>
+               <table style="width:33%">
+                      <tr>
+                          <td>Style</td>
+                          <td>:<span t-field="o.style_no"/></td>
+                     </tr>
+                     <tr>
+                           <td>Retailer</td>
+                           <td>:<span t-field="o.retailer_name"/></td>
+                     </tr>
+                     <tr>
+                           <td>Ready Date</td>
+                           <td>:<span t-field="o.goodsr_date"/></td>
+                     </tr>
+                    <tr>
+                          <td>HS Code</td>
+                           <td>:<span t-field="o.hs_code"/></td>
+                     </tr>
+                    <tr>
+                          <td>So No</td>
+                           <td>:<span t-field="o.ebiz_no"/></td>
+                     </tr>
+                    <tr>
+                          <td>Po No</td>
+                           <td>:<span t-field="o.po_no"/></td>
+                     </tr>
+                </table>
+
+<br/>
+
+           <table class="table table-bordered">
+                    <tr>
+                          <th>S/L</th>
+                          <th>Item Ref</th>
+                          <!--<th>Description</th>-->
+                          <th  t-if="True in [l.euro_size.name!=False for l in o.invoice_line]">Euro Size</th>
+                          <th  t-if="True in [l.uk_size.name!=False for l in o.invoice_line]">UK Size</th>
+                          <th  t-if="True in [l.cn_size.name!=False for l in o.invoice_line]">CN Size</th>
+                          <th  t-if="True in [l.size.name!=False for l in o.invoice_line]">Size</th>
+                          <th  t-if="True in [l.color_pan.name!=False for l in o.invoice_line]">Pantone</th>
+                          <th>Details</th>
+                          <th>Quantity(Pcs)</th>
+                          <th>Price/100 Pc(C and F)</th>
+                          <th>Amount(USS)</th>
+                    </tr>
+                   <tbody class="invoice_tbody">
+                               <tr t-foreach="o.invoice_line" t-as="l">
+                                     <td><span t-field="l.sequence"/></td>
+                                     <td><span t-field="l.name"/></td>
+                                     <td t-if="l.euro_size"><span t-field="l.euro_size"/></td>
+                                     <td t-if="l.uk_size"><span t-field="l.uk_size"/></td>
+                                     <td t-if="l.cn_size"><span t-field="l.cn_size"/></td>
+                                     <td t-if="l.size"><span t-field="l.size"/></td>
+                                     <td t-if="l.color_pan"><span t-field="l.color_pan"/></td>
+                                     <td><span t-field="l.name"/></td>
+                                     <td><span t-field="l.quantity"/></td>
+                                     <td><span t-field="l.price_unit"/></td>
+                                     <td class="text-right">
+                                          <span t-field="l.price_subtotal" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;,               &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                                     </td>
+                               </tr>
+                   </tbody>
+           </table>
+
+            <div class="row">
+                <div class="col-xs-4 pull-right">
+                    <table class="table table-condensed">
+                        <!--<tr class="border-black">
+                            <td><strong>Total Without Taxes</strong></td>
+                            <td class="text-right">
+                                <span t-field="o.amount_untaxed" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Taxes</td>
+                            <td class="text-right">
+                                <span t-field="o.amount_tax" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+                            </td>
+                        </tr>-->
+                       <tr class="border-black">
+                            <td>Subtotal</td>
+                            <td class="text-right">
+                                 <span t-field="o.amount_untaxed" />
+                            </td>
+                        </tr>
+                        <tr class="border-black">
+                            <td>Other Total Cost</td>
+                            <td class="text-right">
+                                 <span t-field="o.total_other_cost" />
+                            </td>
+                        </tr>
+                       <tr class="border-black">
+                            <td><strong>Total</strong></td>
+                            <td class="text-right">
+                                 <span t-field="o.amount_total" />
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+
+          <div class="col-xs-4 pull-left" >
+           <table class="table table-bordered">
+                    <tr>
+                          <th>Other Cost</th>
+                          <th>Amount</th>
+                    </tr>
+                   <tbody class="invoice_tbody">
+                               <tr t-foreach="o.other_cost" t-as="l">
+                                     <td><span t-field="l.other_costs"/></td>
+                                     <td><span t-field="l.cost_amount"/></td>
+                               </tr>
+                   </tbody>
+           </table>
+                </div>
+            </div>
+                <div>
+                    <strong>In Words:</strong>
+                    <span t-field="o.amount_total_words"/>
+                </div>
+<br/>
+                <div>
+                    <u><strong>TERMS and CONDITION:</strong></u>
+                        <p t-field="o.termscond_description"/>
+                </div>
+
+                <div class="row">
+                     <div class="row">
+                          <div class="col-xs-3">
+                                  For and on behalf of  :<strong t-field="o.partner_id"></strong>
+                          </div>
+                          <div class="col-xs-3 col-xs-offset-6">
+                                  For :<strong t-field="o.company_id"></strong>
+                          </div>
+                     </div>
+
+                   <div class="row">
+                         <div class="col-xs-3">
+                              <br/>
+                              <br/>
+                              <hr style="border: 1px dotted black;" />
+                              <p> Authorized Signatory</p>
+                         </div>
+                         <div class="col-xs-3 col-xs-offset-6">
+                                <br/>
+                                <br/>
+                                <hr style="border: 1px dotted black;" />
+                                <p> Authorized Signatory</p>
+                        </div>
+                   </div>
+
+                </div>
+               <div class="col-xs-8">
+                    <address t-field="o.company_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+              </div>
+        </div>
+
+</t>

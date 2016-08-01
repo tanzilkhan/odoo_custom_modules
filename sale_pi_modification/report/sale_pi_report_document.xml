@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--Custom report.-->
+<openerp>
+<data>
+<template id="sale_pi_report_document">
+     <t t-call="report.html_container">
+         <t t-foreach="docs" t-as="o">
+             <div class="page">
+                 <style>
+                      tr{page-break-inside: avoid;}
+                 </style>
+                 <div>
+                     <h4 style="text-align:center;"><strong>DAILY ORDER RECEIVED REPORT</strong></h4>
+                     <p style="text-align:center;"><i>Date From: <span t-field="o.date_from"/> Date To: <span t-field="o.date_to"/></i></p>
+                     <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Customer</th>
+                                <th>Model</th>
+                                <th>Description</th>
+                                <th>Width</th>
+                                <th>Length</th>
+                                <th>Gusset</th>
+                                <th>Flap</th>
+                                <th>UOM</th>
+                                <th>Quantity</th>
+                                <th>Unit Price</th>
+                                <th>Amount</th>
+                                <th>PI No.</th>
+                                <th>Retailer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr t-foreach="o.daily_order_rcv_rel" t-as="l">
+                                <td><span t-field="l.so_date"/></td>
+                                <td><span t-field="l.customer"/></td>
+                                <td><span t-field="l.model"/></td>
+                                <td><span t-field="l.description"/></td>
+                                <td><span t-field="l.model_width"/></td>
+                                <td><span t-field="l.model_length"/></td>
+                                <td><span t-field="l.model_gusset"/></td>
+                                <td><span t-field="l.model_flap"/></td>
+                                <td><span t-field="l.model_uom"/></td>
+                                <td><span t-field="l.model_quantity"/></td>
+                                <td><span t-field="l.model_unit_price"/></td>
+                                <td><span t-field="l.so_amount"/></td>
+                                <td><span t-field="l.pi_no"/></td>
+                                <td><span t-field="l.so_retailer"/></td>
+                            </tr>
+                        </tbody>
+                     </table>
+                     <div class="col-xs-6">
+
+                     </div>
+                     <div class="col-xs-6">
+                         <p><strong>Total Quantity: <span t-field="o.total_quantity"/></strong></p>
+                         <p><strong>Total Price: <span t-field="o.total_amount"/></strong></p>
+                     </div>
+                 </div>
+             </div>
+         </t>
+     </t>
+</template>
+
+</data>
+</openerp>

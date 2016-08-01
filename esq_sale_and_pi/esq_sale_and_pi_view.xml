@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+
+        <!--Terms and conditions starts here-->
+        <record id="terms_conditions_form" model="ir.ui.view">
+            <field name="name">terms.conditions.form</field>
+            <field name="model">terms.conditions</field>
+            <field name="arch" type="xml">
+                <form string="Terms &amp; Conditions">
+                    <group>
+                        <field name="name"/>
+                        <field name="is_on"/>
+                        <field name="tc_description"/>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="terms_conditions_tree" model="ir.ui.view">
+            <field name="name">terms.conditions.tree</field>
+            <field name="model">terms.conditions</field>
+            <field name="arch" type="xml">
+                <tree string="Terms &amp; Conditions">
+                    <field name="name"/>
+                    <field name="is_on"/>
+                    <field name="tc_description"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_terms_conditions" model="ir.actions.act_window">
+            <field name="name">Terms &amp; Conditions</field>
+            <field name="res_model">terms.conditions</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_terms_conditions" action="open_terms_conditions" parent="base.menu_sales" name="Terms &amp; Conditions" sequence="10"/>
+
+        <!--Retailer Starts Here-->
+        <record id="retailer_desc_form" model="ir.ui.view">
+            <field name="name">retailer.desc.form</field>
+            <field name="model">retailer.desc</field>
+            <field name="arch" type="xml">
+                <form string="Retailers">
+                    <group>
+                        <field name="name"/>
+                        <field name="retailer_code"/>
+                        <field name="is_size"/>
+                    </group>
+                    <notebook>
+                        <page string="Size Details"  attrs="{'invisible':[('is_size','=',False)]}">
+                            <field name="size_details" widget="one2many_list">
+                                <tree string="Size Details" editable="bottom" nolabel="1">
+                                    <field name="euro_size"/>
+                                    <field name="uk_size"/>
+                                    <field name="cn_size"/>
+                                    <field name="size"/>
+                                    <field name="color_pan"/>
+                                </tree>
+                            </field>
+                        </page>
+                    </notebook>
+                </form>
+            </field>
+        </record>
+
+        <record id="retailer_desc_tree" model="ir.ui.view">
+            <field name="name">retailer.desc.tree</field>
+            <field name="model">retailer.desc</field>
+            <field name="arch" type="xml">
+                <tree string="Retailers">
+                    <field name="name"/>
+                    <field name="retailer_code"/>
+                    <field name="is_size"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="open_retailer_desc" model="ir.actions.act_window">
+            <field name="name">Retailers</field>
+            <field name="res_model">retailer.desc</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_retailer_desc" action="open_retailer_desc" parent="base.menu_sales" name="Retailers" sequence="9"/>
+
+         <record id="customer_add_form" model="ir.ui.view">
+             <field name="name">customer.additional.form</field>
+             <field name="model">res.partner</field>
+             <field name="inherit_id" ref="base.view_partner_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//page[@string='Contacts']" position="after">
+                    <page string="Shipping Address">
+                        <group>
+                            <group>
+                                <field name="shipping_name"/>
+                                <field name="shipping_address"/>
+                                <field name="shipping_mobile"/>
+                            </group>
+                            <group>
+
+                            </group>
+                        </group>
+                    </page>
+                </xpath>
+             </field>
+        </record>
+
+        <record id="account_invoice_adding_form" model="ir.ui.view">
+             <field name="name">account.invoiceee.form.inherit</field>
+             <field name="model">account.invoice</field>
+             <field name="inherit_id" ref="account.invoice_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='fiscal_position']" position="after">
+                    <field name="retailer_name"/>
+                    <field name="pi_no"/>
+                    <field name="style_no"/>
+                    <field name="ebiz_no"/>
+                    <field name="po_no"/>
+                    <field name="goodsr_date"/>
+                    <field name="hs_code"/>
+                    <field name="has_size"/>
+                </xpath>
+                 <xpath expr="//field[@name='invoice_line_tax_id']"
+                          position="attributes">
+                     <attribute name="invisible">True</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='residual']"
+                          position="attributes">
+                     <attribute name="invisible">True</attribute>
+                </xpath>
+                 <xpath expr="//field[@name='amount_tax']"
+                          position="attributes">
+                     <attribute name="invisible">True</attribute>
+                </xpath>
+                 <xpath expr="//label[@for='amount_tax']"
+                          position="attributes">
+                     <attribute name="invisible">True</attribute>
+                </xpath>
+                 <!--<xpath expr="//field[@name='amount_untaxed']"-->
+                          <!--position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                <!--</xpath>-->
+                 <xpath expr="//tree[@string='Invoice Lines']/field[@name='product_id']" position="after" >
+                     <!--<field name="sequence_no" />-->
+                     <field name="euro_size" />
+                     <field name="uk_size" />
+                     <field name="cn_size" />
+                     <field name="size"/>
+                     <field name="color_pan" />
+                     <field name="retailer_size" invisible = 'True'/>
+                </xpath>
+                 <xpath expr="//field[@name='invoice_line']" position="attributes">
+                     <attribute name="context">{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type, 'default_retailer_size': has_size }</attribute>
+
+                 </xpath>
+                 <xpath expr="//group[@class='oe_subtotal_footer oe_right']" position="after">
+                      <div style="width: 50%%">
+                            <field name="other_cost" widget="one2many_list">
+                                <tree string="Other Costs" editable="bottom">
+                                    <field name="other_costs"/>
+                                    <field name="cost_amount"/>
+                                </tree>
+                            </field>
+                        </div>
+                     <group>
+                        <field name="amount_total_words"/>
+                        <field name="terms_conditions"/>
+                    </group>
+                     <div>
+                        <field name="termscond_description" placeholder="Terms and Conditions"/>
+                     </div>
+                 </xpath>
+                 <xpath expr="//field[@name='amount_untaxed']" position="after">
+                     <field name="total_other_cost" readonly="True"/>
+                 </xpath>
+                 <xpath expr="//label[@for='amount_tax']" position="attributes">
+                     <attribute name="invisible">True</attribute>
+                 </xpath>
+                 <xpath expr="//button[@name='button_reset_taxes']" position="attributes">
+                     <attribute name="invisible">True</attribute>
+                 </xpath>
+
+             </field>
+        </record>
+
+        <!--SALE ORDER INTEGRATION WITH PROFORMA INVOICE-->
+        <record id="sale_order_adding_form" model="ir.ui.view">
+             <field name="name">sale.order.form.inherit</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_form"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="retailer_name"/>
+                    <field name="pi_no"/>
+                    <field name="style_no"/>
+                    <field name="ebiz_no"/>
+                    <field name="po_no"/>
+                    <field name="goodsr_date"/>
+                    <field name="hs_code"/>
+                    <field name="has_size"/>
+                </xpath>
+                 <!--<xpath expr="//field[@name='invoice_line_tax_id']"-->
+                          <!--position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                <!--</xpath>-->
+                 <!--<xpath expr="//field[@name='residual']"-->
+                          <!--position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                <!--</xpath>-->
+                 <!--<xpath expr="//field[@name='amount_tax']"-->
+                          <!--position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                <!--</xpath>-->
+                 <!--<xpath expr="//label[@for='amount_tax']"-->
+                          <!--position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                <!--</xpath>-->
+                 <!--<xpath expr="//field[@name='amount_untaxed']"-->
+                          <!--position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                <!--</xpath>-->
+                 <xpath expr="//form[@string='Sales Order Lines']//field[@name='product_id']" position="after" >
+                     <field name="euro_size" />
+                     <field name="uk_size" />
+                     <field name="cn_size" />
+                     <field name="size"/>
+                     <field name="color_pan" />
+                     <field name="delivery_from_sale_line" />
+                     <field name="retailer_size" invisible = 'True'/>
+                </xpath>
+                 <xpath expr="//tree[@string='Sales Order Lines']/field[@name='product_id']" position="after" >
+                     <field name="euro_size" />
+                     <field name="uk_size" />
+                     <field name="cn_size" />
+                     <field name="size"/>
+                     <field name="color_pan" />
+                     <field name="delivery_from_sale_line" />
+                     <field name="retailer_size" invisible = 'True'/>
+                </xpath>
+                 <!--<xpath expr="//field[@name='order_line']" position="attributes">-->
+                     <!--<attribute name="context">{'partner_id': partner_id, 'price_type': context.get('price_type') or False, 'type': type, 'default_retailer_size': has_size }</attribute>-->
+
+                 <!--</xpath>-->
+                 <xpath expr="//group[@class='oe_subtotal_footer oe_right']" position="after">
+                      <div style="width: 50%%">
+                            <field name="other_cost" widget="one2many_list">
+                                <tree string="Other Costs" editable="bottom">
+                                    <field name="other_costs"/>
+                                    <field name="cost_amount"/>
+                                </tree>
+                            </field>
+                        </div>
+                     <group>
+                        <field name="amount_total_words"/>
+                        <field name="terms_conditions"/>
+                    </group>
+                     <div>
+                        <field name="termscond_description" placeholder="Terms and Conditions"/>
+                     </div>
+                 </xpath>
+                 <xpath expr="//field[@name='amount_untaxed']" position="after">
+                     <field name="total_other_cost" readonly="True"/>
+                 </xpath>
+                 <xpath expr="//field[@name='amount_tax']" position="attributes">
+                     <attribute name="invisible">True</attribute>
+                 </xpath>
+                 <!--<xpath expr="//button[@name='button_reset_taxes']" position="attributes">-->
+                     <!--<attribute name="invisible">True</attribute>-->
+                 <!--</xpath>-->
+
+             </field>
+        </record>
+
+        <record id="sale_order_adding_tree" model="ir.ui.view">
+             <field name="name">sale.orders.tree.inherit</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_order_tree"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="pi_no"/>
+                </xpath>
+             </field>
+        </record>
+
+        <record id="sale_order_adding_search" model="ir.ui.view">
+             <field name="name">sale.orders.search.inherit</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_sales_order_filter"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="pi_no" string="PI No"/>
+                </xpath>
+             </field>
+        </record>
+
+        <record id="quotation_adding_pi_tree" model="ir.ui.view">
+             <field name="name">quotation.tree.inherit</field>
+             <field name="model">sale.order</field>
+             <field name="inherit_id" ref="sale.view_quotation_tree"/>
+             <field name="arch" type="xml">
+                <xpath expr="//field[@name='name']" position="before">
+                    <field name="pi_no" string="PI No"/>
+                </xpath>
+             </field>
+        </record>
+
+
+    </data>
+</openerp>
