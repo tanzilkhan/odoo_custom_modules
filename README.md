@@ -1,3 +1,3 @@
 # odoo_custom_modules
 
-Developed and customized by Md. Tanzilul Hasan Khan (AKA Tanzil Khan)
+Don't install, it will mess up your database. There are other dependencies for these modules.
